@@ -1,25 +1,28 @@
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { animate, createScope, spring, onScroll, stagger } from "animejs";
 import { profile } from "../data/content";
 import Reveal from "./Reveal";
-
-const list = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.08 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 10, scale: 0.9 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 300, damping: 18 },
-  },
-};
+import { pressable } from "../lib/interactions";
 
 export default function Contact() {
+  const socials = useRef(null);
+  const scope = useRef(null);
+
+  useEffect(() => {
+    scope.current = createScope({ root: socials }).add(() => {
+      animate(socials.current.querySelectorAll("li"), {
+        opacity: [0, 1],
+        y: [10, 0],
+        scale: [0.9, 1],
+        ease: spring({ stiffness: 300, damping: 18 }),
+        delay: stagger(80),
+        autoplay: onScroll({ target: socials.current }),
+      });
+    });
+
+    return () => scope.current.revert();
+  }, []);
+
   return (
     <section id="contact" className="section">
       <Reveal as="h2" className="section-title">
@@ -29,36 +32,23 @@ export default function Contact() {
         I'm always open to new opportunities and conversations. Feel free to reach out.
       </Reveal>
       <Reveal delay={0.15}>
-        <motion.a
+        <a
           className="button button-primary"
           href={`mailto:${profile.email}`}
-          whileHover={{ scale: 1.08, rotate: -1 }}
-          whileTap={{ scale: 0.92 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          {...pressable({ scale: 1.08, rotate: -1 })}
         >
           {profile.email}
-        </motion.a>
+        </a>
       </Reveal>
-      <motion.ul
-        className="social-links"
-        variants={list}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.5 }}
-      >
+      <ul className="social-links" ref={socials}>
         {profile.social.map((social) => (
-          <motion.li
-            key={social.label}
-            variants={item}
-            whileHover={{ scale: 1.1, y: -2 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          >
+          <li key={social.label} {...pressable({ scale: 1.1, y: -2 }, 1)}>
             <a href={social.url} target="_blank" rel="noreferrer">
               {social.label}
             </a>
-          </motion.li>
+          </li>
         ))}
-      </motion.ul>
+      </ul>
     </section>
   );
 }

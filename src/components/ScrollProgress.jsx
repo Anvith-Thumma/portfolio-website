@@ -1,12 +1,25 @@
-import { motion, useScroll, useSpring } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { animate, createScope, onScroll } from "animejs";
 
 export default function ScrollProgress() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 400,
-    damping: 40,
-    restDelta: 0.001,
-  });
+  const bar = useRef(null);
+  const scope = useRef(null);
 
-  return <motion.div className="scroll-progress" style={{ scaleX }} />;
+  useEffect(() => {
+    scope.current = createScope({ root: bar }).add(() => {
+      animate(bar.current, {
+        scaleX: [0, 1],
+        ease: "linear",
+        autoplay: onScroll({
+          enter: "top top",
+          leave: "bottom bottom",
+          sync: true,
+        }),
+      });
+    });
+
+    return () => scope.current.revert();
+  }, []);
+
+  return <div className="scroll-progress" ref={bar} />;
 }

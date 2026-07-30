@@ -1,59 +1,65 @@
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { animate, createScope, spring, onScroll, stagger } from "animejs";
 import { projects } from "../data/content";
 import Reveal from "./Reveal";
-
-const grid = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const card = {
-  hidden: { opacity: 0, y: 24, scale: 0.92 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 200, damping: 16 },
-  },
-};
+import { pressable } from "../lib/interactions";
+import ProjectIcon from "./ProjectIcon";
+import ProjectDetail from "./ProjectDetail";
 
 export default function Projects() {
+  const grid = useRef(null);
+  const scope = useRef(null);
+  const [selected, setSelected] = useState(null);
+
+  useEffect(() => {
+    scope.current = createScope({ root: grid }).add(() => {
+      animate(grid.current.querySelectorAll(".project-card"), {
+        opacity: [0, 1],
+        y: [24, 0],
+        scale: [0.92, 1],
+        ease: spring({ stiffness: 200, damping: 16 }),
+        delay: stagger(100),
+        autoplay: onScroll({ target: grid.current }),
+      });
+    });
+
+    return () => scope.current.revert();
+  }, []);
+
   return (
     <section id="projects" className="section">
       <Reveal as="h2" className="section-title">
         Projects
       </Reveal>
-      <motion.div
-        className="project-grid"
-        variants={grid}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.15 }}
-      >
+      <div className="project-grid" ref={grid}>
         {projects.map((project) => (
-          <motion.a
+          <div
             key={project.title}
             className="project-card"
-            href={project.link}
-            target="_blank"
-            rel="noreferrer"
-            variants={card}
-            whileHover={{ y: -8, scale: 1.03, rotate: -0.5 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 350, damping: 16 }}
+            {...pressable({ y: -8, scale: 1.03, rotate: -0.5 }, 0.97)}
           >
+            <button
+              type="button"
+              className="project-icon-button"
+              onClick={() => setSelected(project)}
+              aria-label={`View details for ${project.title}`}
+              {...pressable({ scale: 1.12, rotate: -4 }, 0.9)}
+            >
+              <ProjectIcon name={project.icon} className="project-icon" />
+            </button>
             <h3>{project.title}</h3>
-            <p>{project.description}</p>
+            <p>{project.summary}</p>
             <ul className="project-tags">
               {project.tags.map((tag) => (
                 <li key={tag}>{tag}</li>
               ))}
             </ul>
-          </motion.a>
+          </div>
         ))}
-      </motion.div>
+      </div>
+      {selected && (
+        <ProjectDetail project={selected} onClose={() => setSelected(null)} />
+      )}
     </section>
   );
 }

@@ -1,45 +1,47 @@
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { animate, createScope, spring, onScroll, stagger } from "animejs";
 import { profile, experience, education } from "../data/content";
 import Reveal from "./Reveal";
+import { pressable } from "../lib/interactions";
 
-const list = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.1 },
-  },
-};
+function useStaggerReveal() {
+  const root = useRef(null);
+  const scope = useRef(null);
 
-const item = {
-  hidden: { opacity: 0, y: 16, scale: 0.96 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 220, damping: 18 },
-  },
-};
+  useEffect(() => {
+    scope.current = createScope({ root }).add(() => {
+      animate(root.current.querySelectorAll(".timeline-item"), {
+        opacity: [0, 1],
+        y: [16, 0],
+        scale: [0.96, 1],
+        ease: spring({ stiffness: 220, damping: 18 }),
+        delay: stagger(100),
+        autoplay: onScroll({ target: root.current }),
+      });
+    });
+
+    return () => scope.current.revert();
+  }, []);
+
+  return root;
+}
 
 export default function Experience() {
+  const experienceList = useStaggerReveal();
+  const educationList = useStaggerReveal();
+
   return (
     <section id="experience" className="section">
       <Reveal as="h2" className="section-title">
         Experience
       </Reveal>
 
-      <motion.ul
-        className="timeline"
-        variants={list}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-      >
+      <ul className="timeline" ref={experienceList}>
         {experience.map((entry) => (
-          <motion.li
+          <li
             key={entry.role + entry.company}
             className="timeline-item"
-            variants={item}
-            whileHover={{ x: 6, scale: 1.01 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            {...pressable({ x: 6, scale: 1.01 }, 1)}
           >
             <div className="timeline-header">
               <h3>{entry.role}</h3>
@@ -47,46 +49,36 @@ export default function Experience() {
             </div>
             <p className="timeline-company">{entry.company}</p>
             <p className="timeline-description">{entry.description}</p>
-          </motion.li>
+          </li>
         ))}
-      </motion.ul>
+      </ul>
 
       <Reveal as="h3" className="subsection-title">
         Education
       </Reveal>
-      <motion.ul
-        className="timeline"
-        variants={list}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-      >
+      <ul className="timeline" ref={educationList}>
         {education.map((entry) => (
-          <motion.li
+          <li
             key={entry.school}
             className="timeline-item"
-            variants={item}
-            whileHover={{ x: 6, scale: 1.01 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            {...pressable({ x: 6, scale: 1.01 }, 1)}
           >
             <div className="timeline-header">
               <h3>{entry.degree}</h3>
               <span className="timeline-period">{entry.period}</span>
             </div>
             <p className="timeline-company">{entry.school}</p>
-          </motion.li>
+          </li>
         ))}
-      </motion.ul>
+      </ul>
 
-      <motion.a
+      <a
         className="button button-secondary"
         href={profile.resumeUrl}
-        whileHover={{ scale: 1.08, rotate: -1 }}
-        whileTap={{ scale: 0.92 }}
-        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+        {...pressable({ scale: 1.08, rotate: -1 })}
       >
         Download resume
-      </motion.a>
+      </a>
     </section>
   );
 }

@@ -1,63 +1,71 @@
 // Edit this file with your real information.
 
 export const profile = {
-  name: "Your Name",
-  title: "Software Engineer",
-  tagline: "I build clean, useful things for the web.",
-  bio: "I'm a software engineer who enjoys turning ideas into well-crafted products. I care about simple design, readable code, and solving real problems for real people. Outside of work I like [your interests here].",
-  location: "City, Country",
-  email: "you@example.com",
-  resumeUrl: "/resume.pdf",
+  name: "Anvith Thumma",
+  title: "Data Scientist",
+  tagline:
+    "I turn messy, large-scale datasets into statistical insight and AI-powered products.",
+  bio: "I'm a Data Science graduate with hands-on experience building Python/R data pipelines, ELT workflows, statistical models, and full-stack AI applications. I've worked with large-scale healthcare datasets, including 30M+ Medicare claims records and county-level public health data, and I care about turning that kind of scale into findings people can actually use.",
+  location: "Tempe, AZ",
+  email: "anvith.thumma@gmail.com",
+  resumeUrl: "/resume.docx",
   social: [
-    { label: "GitHub", url: "https://github.com/yourhandle" },
-    { label: "LinkedIn", url: "https://linkedin.com/in/yourhandle" },
-    { label: "Twitter", url: "https://twitter.com/yourhandle" },
+    { label: "GitHub", url: "https://github.com/Anvith-Thumma" },
+    { label: "LinkedIn", url: "https://www.linkedin.com/in/anvithumma" },
   ],
 };
 
 export const projects = [
   {
-    title: "Project One",
-    description:
-      "A short description of the project, what problem it solves, and the impact it had.",
-    tags: ["React", "Node.js", "PostgreSQL"],
-    link: "https://github.com/yourhandle/project-one",
+    title: "Pickleball Coach AI",
+    icon: "pickleball",
+    summary: "An AI coaching platform that turns your play style into a personalized game plan.",
+    detail: [
+      "Developed a full-stack AI coaching platform that delivers personalized training recommendations and strategic player analysis.",
+      "Architected RESTful APIs for coaching chat, player assessment, similarity analysis, and AI-generated scouting reports.",
+      "Designed a 22-question Player DNA assessment that maps user responses into a 14-dimensional normalized player vector for skill profiling and recommendation generation.",
+      "Developed an AI-powered cosine similarity engine to match user profiles against a dataset of 50+ professional athletes, enabling personalized insights.",
+      "Built a React interface integrated with AI capabilities for player onboarding, assessment intake, and AI-assisted coaching feedback.",
+    ],
+    tags: ["React", "Node.js", "Express", "Anthropic Claude"],
+    links: [
+      { label: "GitHub", url: "https://github.com/Anvith-Thumma/pickleball-coach" },
+    ],
   },
   {
-    title: "Project Two",
-    description:
-      "A short description of the project, what problem it solves, and the impact it had.",
-    tags: ["Python", "Machine Learning"],
-    link: "https://github.com/yourhandle/project-two",
-  },
-  {
-    title: "Project Three",
-    description:
-      "A short description of the project, what problem it solves, and the impact it had.",
-    tags: ["TypeScript", "Vite"],
-    link: "https://github.com/yourhandle/project-three",
+    title: "Statistical Analysis of Vision Health Disparities in the U.S.",
+    icon: "vision",
+    summary: "A statistical deep-dive into vision healthcare access across 30M+ Medicare recipients.",
+    detail: [
+      "Developed Python-based ELT pipelines to extract, transform, and analyze Medicare claims covering 30 million+ insured individuals.",
+      "Integrated county-level income, race, and ethnicity data to assess vision healthcare disparities across U.S. populations.",
+      "Applied statistical inference, exploratory data analysis, and comparative testing to identify significant differences in healthcare access among Black, Hispanic, and Native American populations.",
+      "Performed feature engineering using Cook's Distance to identify influential observations and improve model robustness.",
+      "Built and evaluated predictive models using polynomial regression and decision tree algorithms to forecast regional health trends.",
+    ],
+    tags: ["Python", "Statistical Inference", "Machine Learning"],
+    links: [
+      { label: "Paper — Part 1", url: "/vision-health-disparities-part1.pdf" },
+      { label: "Paper — Part 2", url: "/vision-health-disparities-part2.pdf" },
+    ],
   },
 ];
 
 export const experience = [
   {
-    role: "Job Title",
-    company: "Company Name",
-    period: "2024 — Present",
-    description: "One or two lines about your responsibilities and achievements in this role.",
-  },
-  {
-    role: "Previous Job Title",
-    company: "Previous Company",
-    period: "2022 — 2024",
-    description: "One or two lines about your responsibilities and achievements in this role.",
+    role: "Undergraduate Researcher",
+    company:
+      "Carnegie Mellon University / UnitedHealth Group — Bridges to Healthcare & Technology Program",
+    period: "June 2025 — July 2025",
+    description:
+      "Built Python and R data pipelines to clean, transform, and analyze health datasets spanning 3,100+ U.S. counties. Engineered and compared regression models to evaluate obesity predictors, identifying physical inactivity as the strongest predictor and validating the Food Environment Index as ~4x more significant than limited food access.",
   },
 ];
 
 export const education = [
   {
-    school: "University Name",
-    degree: "Degree, Major",
-    period: "2018 — 2022",
+    school: "Arizona State University",
+    degree: "B.S. in Data Science, Minor in Business",
+    period: "May 2026",
   },
 ];

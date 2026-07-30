@@ -13,22 +13,7 @@
 
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
-  color-scheme: light dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #15121f;
-    --bg-subtle: #1d1830;
-    --text: #f3f0fa;
-    --text-muted: #b3a8c9;
-    --border: #2c2545;
-    --accent: #a78bfa;
-    --accent-contrast: #1a1330;
-    --accent-soft: #291f45;
-    --bubble-1: #4c1d95;
-    --bubble-2: #6d28d9;
-  }
+  color-scheme: light;
 }
 
 * {
@@ -87,6 +72,7 @@ a {
   background: var(--accent);
   border-radius: 0 999px 999px 0;
   transform-origin: 0%;
+  transform: scaleX(0);
   z-index: 20;
 }
 
@@ -98,6 +84,15 @@ a {
   z-index: 10;
   background: color-mix(in srgb, var(--bg) 80%, transparent);
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-shadow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.25);
+  opacity: 0;
 }
 
 .nav-inner {
@@ -115,12 +110,14 @@ a {
 }
 
 .nav-links {
+  position: relative;
   display: flex;
   gap: 0.25rem;
 }
 
 .nav-links a {
   position: relative;
+  z-index: 1;
   display: inline-block;
   text-decoration: none;
   color: var(--text-muted);
@@ -141,10 +138,14 @@ a {
 
 .nav-pill {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  height: 100%;
   border-radius: 999px;
   background: var(--accent-soft);
-  z-index: -1;
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* Hero */
@@ -153,6 +154,25 @@ a {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 5rem 1.5rem 4rem;
+}
+
+.hero-mark {
+  display: block;
+  width: 200px;
+  height: 58px;
+  margin: 0 0 1.25rem -6px;
+  overflow: visible;
+}
+
+.hero-mark-bar {
+  fill: var(--accent);
+}
+
+.hero-mark-line {
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  fill: none;
 }
 
 .hero-eyebrow {
@@ -307,6 +327,27 @@ a {
   background: var(--bg-subtle);
 }
 
+.project-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+}
+
+.project-icon {
+  width: 30px;
+  height: 30px;
+}
+
 .project-card h3 {
   margin: 0 0 0.5rem;
   font-size: 1.1rem;
@@ -337,6 +378,92 @@ a {
 
 .project-card:hover .project-tags li {
   transform: translateY(-2px);
+}
+
+.project-links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.project-link {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.project-link:hover {
+  text-decoration: underline;
+}
+
+/* Project detail modal */
+
+.project-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: color-mix(in srgb, var(--text) 45%, transparent);
+  z-index: 50;
+}
+
+.project-modal {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--bg);
+}
+
+.project-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.project-modal-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.project-modal h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.3rem;
+  padding-right: 2rem;
+}
+
+.project-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0 0 1.25rem;
+  padding-left: 1.1rem;
+  color: var(--text-muted);
+}
+
+.project-modal .project-tags {
+  margin-bottom: 1.25rem;
 }
 
 /* Contact */

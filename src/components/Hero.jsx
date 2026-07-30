@@ -1,59 +1,49 @@
-import { motion } from "framer-motion";
+import { useLayoutEffect, useRef } from "react";
+import { animate, createScope, spring, stagger } from "animejs";
 import { profile } from "../data/content";
-
-const container = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 200, damping: 16 },
-  },
-};
+import { pressable } from "../lib/interactions";
+import HeroMark from "./HeroMark";
 
 export default function Hero() {
+  const root = useRef(null);
+  const scope = useRef(null);
+
+  useLayoutEffect(() => {
+    scope.current = createScope({ root }).add(() => {
+      animate(root.current.querySelectorAll(".hero-animate"), {
+        opacity: [0, 1],
+        y: [20, 0],
+        scale: [0.95, 1],
+        ease: spring({ stiffness: 200, damping: 16 }),
+        delay: stagger(120, { start: 100 }),
+      });
+    });
+
+    return () => scope.current.revert();
+  }, []);
+
   return (
-    <motion.section
-      id="top"
-      className="hero"
-      variants={container}
-      initial="hidden"
-      animate="show"
-    >
-      <motion.p className="hero-eyebrow" variants={item}>
-        {profile.title}
-      </motion.p>
-      <motion.h1 variants={item}>{profile.name}</motion.h1>
-      <motion.p className="hero-tagline" variants={item}>
-        {profile.tagline}
-      </motion.p>
-      <motion.div className="hero-actions" variants={item}>
-        <motion.a
+    <section id="top" className="hero" ref={root}>
+      <HeroMark />
+      <p className="hero-eyebrow hero-animate">{profile.title}</p>
+      <h1 className="hero-animate">{profile.name}</h1>
+      <p className="hero-tagline hero-animate">{profile.tagline}</p>
+      <div className="hero-actions hero-animate">
+        <a
           className="button button-primary"
           href="#projects"
-          whileHover={{ scale: 1.08, rotate: -1 }}
-          whileTap={{ scale: 0.92 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          {...pressable({ scale: 1.08, rotate: -1 })}
         >
           View projects
-        </motion.a>
-        <motion.a
+        </a>
+        <a
           className="button button-secondary"
           href="#contact"
-          whileHover={{ scale: 1.08, rotate: 1 }}
-          whileTap={{ scale: 0.92 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          {...pressable({ scale: 1.08, rotate: 1 })}
         >
           Get in touch
-        </motion.a>
-      </motion.div>
-    </motion.section>
+        </a>
+      </div>
+    </section>
   );
 }

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { animate, spring } from "animejs";
 import { profile } from "../data/content";
 
 const links = [
@@ -9,14 +9,31 @@ const links = [
   { label: "Contact", href: "#contact" },
 ];
 
+const pillEase = spring({ stiffness: 380, damping: 24 });
+
 export default function Nav() {
+  const shadow = useRef(null);
+  const navLinks = useRef(null);
+  const pill = useRef(null);
+  const hasPositionedPill = useRef(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState(null);
-  const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (y) => {
-    setScrolled(y > 8);
-  });
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 8);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!shadow.current) return;
+    animate(shadow.current, {
+      opacity: scrolled ? 1 : 0,
+      duration: 250,
+      ease: "easeOutQuad",
+    });
+  }, [scrolled]);
 
   useEffect(() => {
     const sections = links
@@ -37,21 +54,43 @@ export default function Nav() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const positionPill = (animated) => {
+      if (!active || !pill.current || !navLinks.current) return;
+      const activeLink = navLinks.current.querySelector(`a[href="${active}"]`);
+      if (!activeLink) return;
+
+      const containerRect = navLinks.current.getBoundingClientRect();
+      const linkRect = activeLink.getBoundingClientRect();
+      const left = linkRect.left - containerRect.left;
+      const width = linkRect.width;
+
+      if (!animated || !hasPositionedPill.current) {
+        pill.current.style.left = `${left}px`;
+        pill.current.style.width = `${width}px`;
+        pill.current.style.opacity = "1";
+        hasPositionedPill.current = true;
+      } else {
+        animate(pill.current, { left, width, ease: pillEase });
+      }
+    };
+
+    const handleResize = () => positionPill(false);
+
+    positionPill(true);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [active]);
+
   return (
-    <motion.header
-      className="nav"
-      animate={{
-        boxShadow: scrolled
-          ? "0 1px 0 var(--border), 0 8px 24px -16px rgba(0,0,0,0.25)"
-          : "0 1px 0 var(--border), 0 0px 0px rgba(0,0,0,0)",
-      }}
-      transition={{ duration: 0.25 }}
-    >
+    <header className="nav">
+      <div className="nav-shadow" ref={shadow} />
       <div className="nav-inner">
         <a className="nav-brand" href="#top">
           {profile.name}
         </a>
-        <nav className="nav-links">
+        <nav className="nav-links" ref={navLinks}>
+          <span className="nav-pill" ref={pill} />
           {links.map((link) => (
             <a
               key={link.href}
@@ -59,17 +98,10 @@ export default function Nav() {
               className={active === link.href ? "active" : undefined}
             >
               {link.label}
-              {active === link.href && (
-                <motion.span
-                  className="nav-pill"
-                  layoutId="nav-pill"
-                  transition={{ type: "spring", stiffness: 380, damping: 24 }}
-                />
-              )}
             </a>
           ))}
         </nav>
       </div>
-    </motion.header>
+    </header>
   );
 }
