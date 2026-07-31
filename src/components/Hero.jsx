@@ -2,7 +2,6 @@ import { useLayoutEffect, useRef } from "react";
 import { animate, createScope, spring, stagger } from "animejs";
 import { profile } from "../data/content";
 import { pressable } from "../lib/interactions";
-import HeroMark from "./HeroMark";
 
 export default function Hero() {
   const root = useRef(null);
@@ -24,7 +23,6 @@ export default function Hero() {
 
   return (
     <section id="top" className="hero" ref={root}>
-      <HeroMark />
       <p className="hero-eyebrow hero-animate">{profile.title}</p>
       <h1 className="hero-animate">{profile.name}</h1>
       <p className="hero-tagline hero-animate">{profile.tagline}</p>

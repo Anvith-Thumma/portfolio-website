@@ -5,6 +5,7 @@ import { profile } from "../data/content";
 const links = [
   { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
+  { label: "Certifications", href: "#certifications" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
 ];

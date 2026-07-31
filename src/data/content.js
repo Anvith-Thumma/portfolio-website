@@ -6,7 +6,7 @@ export const profile = {
   tagline:
     "I turn messy, large-scale datasets into statistical insight and AI-powered products.",
   bio: "I'm a Data Science graduate with hands-on experience building Python/R data pipelines, ELT workflows, statistical models, and full-stack AI applications. I've worked with large-scale healthcare datasets, including 30M+ Medicare claims records and county-level public health data, and I care about turning that kind of scale into findings people can actually use.",
-  location: "Tempe, AZ",
+  location: "Tracy, CA",
   email: "anvith.thumma@gmail.com",
   resumeUrl: "/resume.docx",
   social: [
@@ -66,6 +66,15 @@ export const education = [
   {
     school: "Arizona State University",
     degree: "B.S. in Data Science, Minor in Business",
-    period: "May 2026",
+    period: "2022 — 2026",
   },
+];
+
+export const certifications = [
+  { name: "PCAP — Certified Associate Python Programmer", issuer: "Python Institute" },
+  { name: "IBM Data Science Professional Certificate", issuer: "IBM / Coursera" },
+  { name: "AWS Certified Cloud Practitioner", issuer: "Amazon Web Services" },
+  { name: "Claude Platform 101", issuer: "Anthropic" },
+  { name: "Introduction to Agent Skills", issuer: "Anthropic" },
+  { name: "Introduction to Subagents", issuer: "Anthropic" },
 ];
